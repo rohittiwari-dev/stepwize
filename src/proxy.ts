@@ -1,5 +1,6 @@
 import { NextResponse, ProxyConfig, type NextRequest } from 'next/server';
-import { auth } from './lib/auth';
+import { betterFetch } from '@better-fetch/fetch';
+import { Session } from 'better-auth';
 
 const AuthRoutes = ['/sign-in', '/sign-up'];
 const WorkspaceRoutes = ['/dashboard'];
@@ -44,9 +45,16 @@ export const proxy = async (request: NextRequest) => {
 
 	// In a proxy you read the incoming headers off the request itself —
 	// `next/headers` is only available in Server Components / Route Handlers.
-	const session = await auth.api.getSession({
-		headers: request.headers,
-	});
+	const { data: session } = await betterFetch<Session>(
+		'/api/auth/get-session',
+		{
+			baseURL: process.env.BETTER_AUTH_URL,
+			headers: {
+				//get the cookie from the request
+				cookie: request.headers.get('cookie') || '',
+			},
+		},
+	);
 
 	// Protect workspace routes from unauthenticated visitors.
 	if (matchRoute(pathname, WorkspaceRoutes) && !session) {
