@@ -5,6 +5,7 @@ import {
 } from '@orpc/server/fetch';
 import { onError, ORPCError } from '@orpc/server';
 import { SimpleCsrfProtectionHandlerPlugin } from '@orpc/server/plugins';
+import { RatelimitHandlerPlugin } from '@orpc/experimental-ratelimit';
 import router from '@/lib/orpc/routers';
 
 const handler = new RPCHandler(router, {
@@ -16,6 +17,10 @@ const handler = new RPCHandler(router, {
 		// Cap request body size to mitigate memory-exhaustion / DoS via huge payloads.
 		new BodyLimitPlugin({ maxBodySize: 1024 * 1024 }), // 1 MB
 		new CompressionPlugin(),
+		// Adds rate-limit response headers (ratelimit-limit/remaining/reset and
+		// retry-after) whenever a `createRatelimitMiddleware` limit is applied.
+		// See lib/orpc/middlewares/ratelimit.ts.
+		new RatelimitHandlerPlugin(),
 	],
 	// Note: `StrictGetMethodPlugin` is auto-enabled by RPCHandler — GET can only
 	// reach procedures explicitly marked to allow it (an extra CSRF safeguard).

@@ -2,6 +2,7 @@ import { os } from '@orpc/server';
 import type { ORPCContext } from './context';
 import { errors } from './errors';
 import { loggerMiddleware } from './middlewares/logger';
+import { globalRateLimit } from './middlewares/ratelimit';
 import { dbMiddleware } from './middlewares/db';
 import { sessionMiddleware } from './middlewares/session';
 import { requireAuth } from './middlewares/auth';
@@ -21,6 +22,9 @@ const base = os.$context<ORPCContext>().errors(errors);
  */
 export const publicProcedure = base
 	.use(loggerMiddleware)
+	// Per-IP safety net — runs early so abusive bursts are rejected before any
+	// db/session work happens.
+	.use(globalRateLimit)
 	.use(dbMiddleware)
 	.use(sessionMiddleware);
 
