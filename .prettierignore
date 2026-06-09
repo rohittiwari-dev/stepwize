@@ -1,0 +1,17 @@
+.prettierignore
+node_modules
+.next
+next-env.d.ts
+.husky
+bun.lockb
+bun.lock
+*.toml
+drizzle
+public
+dist
+coverage
+build
+.vscode
+*.log
+.idea
+
