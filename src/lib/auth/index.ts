@@ -7,6 +7,7 @@ import {
 	magicLink,
 	openAPI,
 } from 'better-auth/plugins';
+import { nextCookies } from 'better-auth/next-js';
 
 export const auth = betterAuth({
 	appName: 'Stepwize',
@@ -31,6 +32,7 @@ export const auth = betterAuth({
 		},
 	},
 	plugins: [
+		nextCookies(),
 		lastLoginMethod(),
 		haveIBeenPwned(),
 		openAPI(),

@@ -5,12 +5,15 @@ import { Toaster } from '@/components/ui/sonner';
 
 const SignUpPage = () => {
 	return (
-		<main className="flex h-dvh">
+		<main className="flex h-dvh w-screen overflow-hidden">
 			<AuthBrandPanel />
 
-			<div className="relative flex flex-1 items-center justify-center overflow-y-auto p-6 sm:p-10">
+			<div className="relative flex flex-1 items-center justify-center overflow-y-auto bg-background p-6 sm:p-10">
 				<BackgroundGrid showGradient={false} />
-				<AuthForm type="sign-up" />
+
+				<div className="relative z-10 w-full max-w-sm">
+					<AuthForm type="sign-up" />
+				</div>
 			</div>
 
 			<Toaster />

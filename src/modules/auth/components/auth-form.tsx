@@ -3,9 +3,15 @@
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { motion, useReducedMotion, type Variants } from 'motion/react';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { IconArrowRight, IconLoader2 } from '@tabler/icons-react';
+import {
+	IconArrowRight,
+	IconLoader2,
+	IconBolt,
+	IconShieldLock,
+} from '@tabler/icons-react';
 import { authClient } from '@/lib/auth/clients';
 import { Button } from '@/components/ui/button';
 import type { AuthMode } from '@/modules/auth/types';
@@ -19,8 +25,11 @@ interface AuthFormProps {
 	show_logo?: boolean;
 }
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 	const [oauthLoading, setOauthLoading] = useState(false);
+	const reduce = useReducedMotion();
 
 	const schema = useMemo(() => getAuthSchema(type), [type]);
 
@@ -31,6 +40,23 @@ export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 	});
 
 	const { isSubmitting } = form.formState;
+
+	// ── Stagger reveal ──
+
+	const container: Variants = {
+		hidden: {},
+		show: {
+			transition: { staggerChildren: 0.07, delayChildren: 0.05 },
+		},
+	};
+	const item: Variants = {
+		hidden: reduce ? { opacity: 0 } : { opacity: 0, y: 12 },
+		show: {
+			opacity: 1,
+			y: 0,
+			transition: { duration: 0.5, ease: EASE },
+		},
+	};
 
 	// ── Submit (RHF manages isSubmitting automatically) ──
 
@@ -46,9 +72,7 @@ export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 				if (error) {
 					toast.error(error.message || 'Sign up failed.');
 				} else {
-					toast.success(
-						'Account created! Check your email to verify.',
-					);
+					toast.success('Account created! Check your email to verify.');
 				}
 			} else {
 				const { error } = await authClient.signIn.email({
@@ -78,10 +102,7 @@ export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 			});
 
 			if (error) {
-				console.log(error);
-				toast.error(
-					error.message || `Failed to sign in with ${provider}.`,
-				);
+				toast.error(error.message || `Failed to sign in with ${provider}.`);
 				setOauthLoading(false);
 			}
 			// On success, a redirect happens — loading stays on intentionally
@@ -94,19 +115,41 @@ export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 	// ── Render ──
 
 	return (
-		<div className="w-full max-w-sm">
-			<AuthFormHeader mode={type} show_logo={show_logo} />
+		<motion.div
+			variants={container}
+			initial="hidden"
+			animate="show"
+			className="relative w-full"
+		>
+			{/* Mobile-only logo (brand panel is hidden below lg) */}
+			<motion.div
+				variants={item}
+				className="mb-8 flex items-center gap-2.5 lg:hidden"
+			>
+				<span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+					<IconBolt className="size-5" />
+				</span>
+				<span className="text-lg font-bold tracking-tight">Stepwize</span>
+			</motion.div>
 
-			<form onSubmit={form.handleSubmit(onSubmit)} noValidate>
+			<motion.div variants={item}>
+				<AuthFormHeader mode={type} show_logo={show_logo} />
+			</motion.div>
+
+			<motion.form
+				variants={item}
+				onSubmit={form.handleSubmit(onSubmit)}
+				noValidate
+			>
 				<AuthFormFields form={form} mode={type} />
 
 				<Button
 					type="submit"
 					disabled={isSubmitting || oauthLoading}
-					className="w-full h-10 mt-5"
+					className="group mt-6 h-11 w-full"
 				>
 					{isSubmitting ? (
-						<IconLoader2 className="h-4 w-4 animate-spin" />
+						<IconLoader2 className="size-4 animate-spin" />
 					) : (
 						<>
 							<span>
@@ -114,30 +157,66 @@ export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 									? 'Create account'
 									: 'Sign in'}
 							</span>
-							<IconArrowRight className="h-4 w-4" />
+							<IconArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
 						</>
 					)}
 				</Button>
-			</form>
+			</motion.form>
 
-			<AuthFormSocial
-				onSocialLogin={handleSocialLogin}
-				isLoading={oauthLoading}
-				disabled={isSubmitting}
-			/>
+			<motion.div variants={item}>
+				<AuthFormSocial
+					onSocialLogin={handleSocialLogin}
+					isLoading={oauthLoading}
+					disabled={isSubmitting}
+				/>
+			</motion.div>
 
-			<p className="mt-6 text-center text-sm text-muted-foreground">
+			{type === 'sign-up' && (
+				<motion.p
+					variants={item}
+					className="mt-5 text-center text-xs leading-relaxed text-muted-foreground"
+				>
+					By creating an account, you agree to our{' '}
+					<Link
+						href="/terms"
+						className="font-medium text-foreground/80 underline-offset-4 hover:text-primary hover:underline"
+					>
+						Terms
+					</Link>{' '}
+					and{' '}
+					<Link
+						href="/privacy"
+						className="font-medium text-foreground/80 underline-offset-4 hover:text-primary hover:underline"
+					>
+						Privacy Policy
+					</Link>
+					.
+				</motion.p>
+			)}
+
+			<motion.p
+				variants={item}
+				className="mt-6 text-center text-sm text-muted-foreground"
+			>
 				{type === 'sign-in'
 					? "Don't have an account? "
 					: 'Already have an account? '}
 				<Link
 					href={type === 'sign-in' ? '/sign-up' : '/sign-in'}
-					className="font-medium text-primary hover:underline underline-offset-4 transition-colors"
+					className="font-medium text-primary underline-offset-4 transition-colors hover:underline"
 				>
 					{type === 'sign-in' ? 'Sign up' : 'Sign in'}
 				</Link>
-			</p>
-		</div>
+			</motion.p>
+
+			<motion.div
+				variants={item}
+				className="mt-8 flex items-center justify-center gap-1.5 text-xs text-muted-foreground/70"
+			>
+				<IconShieldLock className="size-3.5" />
+				<span>Secured with industry-standard encryption</span>
+			</motion.div>
+		</motion.div>
 	);
 };
 

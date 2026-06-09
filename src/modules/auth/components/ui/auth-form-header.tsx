@@ -8,12 +8,14 @@ interface AuthFormHeaderProps {
 
 const COPY = {
 	'sign-in': {
-		title: 'Welcome back',
-		subtitle: 'Sign in to your Stepwize account.',
+		eyebrow: 'Welcome back',
+		title: 'Sign in to Stepwize',
+		subtitle: 'Pick up right where your workflows left off.',
 	},
 	'sign-up': {
-		title: 'Create an account',
-		subtitle: 'Get started with Stepwize for free.',
+		eyebrow: 'Get started free',
+		title: 'Create your account',
+		subtitle: 'Build your first automation in minutes — no card required.',
 	},
 } as const;
 
@@ -21,17 +23,22 @@ export const AuthFormHeader = ({
 	mode,
 	show_logo = false,
 }: AuthFormHeaderProps) => {
-	const { title, subtitle } = COPY[mode];
+	const { eyebrow, title, subtitle } = COPY[mode];
 
 	return (
-		<div className="mb-6">
+		<div className="mb-7">
 			{show_logo && (
-				<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 mb-4">
-					<IconBolt className="h-5 w-5 text-primary" />
+				<div className="mb-4 flex size-10 items-center justify-center rounded-xl bg-primary/10">
+					<IconBolt className="size-5 text-primary" />
 				</div>
 			)}
-			<h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-			<p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
+			<span className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+				{eyebrow}
+			</span>
+			<h1 className="mt-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+				{title}
+			</h1>
+			<p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>
 		</div>
 	);
 };

@@ -37,15 +37,12 @@ export const AuthFormSocial = ({
 	return (
 		<>
 			{/* ── Divider ── */}
-			<div className="relative my-6">
-				<div className="absolute inset-0 flex items-center">
-					<div className="w-full border-t border-border" />
-				</div>
-				<div className="relative flex justify-center text-xs">
-					<span className="bg-card px-3 text-muted-foreground uppercase tracking-wider font-medium">
-						or
-					</span>
-				</div>
+			<div className="relative my-6 flex items-center">
+				<span className="h-px flex-1 bg-linear-to-r from-transparent to-border" />
+				<span className="px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+					or continue with
+				</span>
+				<span className="h-px flex-1 bg-linear-to-l from-transparent to-border" />
 			</div>
 
 			{/* ── Social button ── */}
@@ -53,14 +50,14 @@ export const AuthFormSocial = ({
 				variant="outline"
 				onClick={() => onSocialLogin('google')}
 				disabled={isLoading || disabled}
-				className="w-full h-10"
+				className="h-11 w-full"
 			>
 				{isLoading ? (
-					<IconLoader2 className="h-4 w-4 animate-spin" />
+					<IconLoader2 className="size-4 animate-spin" />
 				) : (
 					<GoogleIcon />
 				)}
-				<span>Continue with Google</span>
+				<span>Google</span>
 			</Button>
 		</>
 	);
