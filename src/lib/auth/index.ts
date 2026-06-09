@@ -32,7 +32,6 @@ export const auth = betterAuth({
 		},
 	},
 	plugins: [
-		nextCookies(),
 		lastLoginMethod(),
 		haveIBeenPwned(),
 		openAPI(),
@@ -41,5 +40,6 @@ export const auth = betterAuth({
 				// send email to user
 			},
 		}),
+		nextCookies(),
 	],
 });
