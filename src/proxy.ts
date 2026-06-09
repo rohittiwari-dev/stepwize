@@ -1,10 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse, ProxyConfig, type NextRequest } from 'next/server';
 import { auth } from './lib/auth';
-import { headers } from 'next/headers';
 
 const AuthRoutes = ['/sign-in', '/sign-up'];
 const WorkspaceRoutes = ['/dashboard'];
-const PublicRoute = ['/'];
+const PublicRoutes = ['/'];
 
 const matchRoute = (
 	pathname: string,
@@ -37,18 +36,24 @@ const matchRoute = (
 export const proxy = async (request: NextRequest) => {
 	const pathname = request.nextUrl.pathname;
 
-	if (matchRoute(pathname, PublicRoute)) {
+	// Public home page — must be an EXACT match. Using `startsWith` here would
+	// match every path (everything starts with "/") and bypass all auth checks.
+	if (matchRoute(pathname, PublicRoutes, 'exact')) {
 		return NextResponse.next();
 	}
 
+	// In a proxy you read the incoming headers off the request itself —
+	// `next/headers` is only available in Server Components / Route Handlers.
 	const session = await auth.api.getSession({
-		headers: await headers(),
+		headers: request.headers,
 	});
 
+	// Protect workspace routes from unauthenticated visitors.
 	if (matchRoute(pathname, WorkspaceRoutes) && !session) {
 		return NextResponse.redirect(new URL('/sign-in', request.url));
 	}
 
+	// Keep already-authenticated users out of the auth pages.
 	if (matchRoute(pathname, AuthRoutes) && session) {
 		return NextResponse.redirect(new URL('/dashboard', request.url));
 	}
@@ -56,7 +61,7 @@ export const proxy = async (request: NextRequest) => {
 	return NextResponse.next();
 };
 
-export const config = {
+export const config: ProxyConfig = {
 	matcher: [
 		'/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
 		'/(api|rpc)(.*)',
