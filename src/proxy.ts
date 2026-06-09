@@ -1,20 +1,14 @@
-import { NextResponse, ProxyConfig, type NextRequest } from 'next/server';
+import { NextResponse, type ProxyConfig, type NextRequest } from 'next/server';
 import { betterFetch } from '@better-fetch/fetch';
-import { Session } from 'better-auth';
+import type { Session } from 'better-auth';
 
 const AuthRoutes = ['/sign-in', '/sign-up'];
 const WorkspaceRoutes = ['/dashboard'];
-const PublicRoutes = ['/'];
 
 const matchRoute = (
 	pathname: string,
 	routes: string[],
-	type:
-		| 'exact'
-		| 'startsWith'
-		| 'endsWith'
-		| 'includes'
-		| 'regex' = 'startsWith',
+	type: 'exact' | 'startsWith' | 'endsWith' | 'includes' | 'regex' = 'startsWith',
 ) => {
 	if (type === 'exact') {
 		return routes.some((route) => pathname === route);
@@ -37,32 +31,26 @@ const matchRoute = (
 export const proxy = async (request: NextRequest) => {
 	const pathname = request.nextUrl.pathname;
 
-	// Public home page — must be an EXACT match. Using `startsWith` here would
-	// match every path (everything starts with "/") and bypass all auth checks.
-	if (matchRoute(pathname, PublicRoutes, 'exact')) {
-		return NextResponse.next();
-	}
-
-	// In a proxy you read the incoming headers off the request itself —
-	// `next/headers` is only available in Server Components / Route Handlers.
+	// Optimistic, cookie-based session check. This is an HTTP call to the
+	// better-auth handler, so the matcher below MUST NOT include /api/* —
+	// otherwise this request re-enters the proxy and recurses forever.
 	const { data: session } = await betterFetch<Session>(
 		'/api/auth/get-session',
 		{
 			baseURL: process.env.BETTER_AUTH_URL,
 			headers: {
-				//get the cookie from the request
 				cookie: request.headers.get('cookie') || '',
 			},
 		},
 	);
 
 	// Protect workspace routes from unauthenticated visitors.
-	if (matchRoute(pathname, WorkspaceRoutes) && !session) {
+	if (matchRoute(pathname, WorkspaceRoutes, 'startsWith') && !session) {
 		return NextResponse.redirect(new URL('/sign-in', request.url));
 	}
 
 	// Keep already-authenticated users out of the auth pages.
-	if (matchRoute(pathname, AuthRoutes) && session) {
+	if (matchRoute(pathname, AuthRoutes, 'startsWith') && session) {
 		return NextResponse.redirect(new URL('/dashboard', request.url));
 	}
 
@@ -70,8 +58,7 @@ export const proxy = async (request: NextRequest) => {
 };
 
 export const config: ProxyConfig = {
-	matcher: [
-		'/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-		'/(api|rpc)(.*)',
-	],
+	// Scope the proxy to ONLY the routes it guards. It must never match /api/*,
+	// or the betterFetch to /api/auth/get-session above will recurse infinitely.
+	matcher: ['/dashboard/:path*', '/sign-in', '/sign-up'],
 };
