@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { IconBolt, IconMenu2, IconX } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useSession } from '@/lib/auth/clients';
 
 const NAV_LINKS = [
 	{ label: 'Features', href: '#features' },
@@ -17,6 +18,7 @@ const NAV_LINKS = [
 export const LandingNavbar = () => {
 	const [scrolled, setScrolled] = useState(false);
 	const [open, setOpen] = useState(false);
+	const { data: session, isPending } = useSession();
 
 	useEffect(() => {
 		const onScroll = () => setScrolled(window.scrollY > 8);
@@ -60,21 +62,35 @@ export const LandingNavbar = () => {
 
 				{/* Desktop CTAs */}
 				<div className="hidden items-center gap-2 md:flex">
-					<Button
-						variant="ghost"
-						size="lg"
-						nativeButton={false}
-						render={<Link href="/sign-in" />}
-					>
-						Sign in
-					</Button>
-					<Button
-						size="lg"
-						nativeButton={false}
-						render={<Link href="/sign-up" />}
-					>
-						Get started
-					</Button>
+					{!isPending && !session ? (
+						<>
+							<Button
+								variant="ghost"
+								size="lg"
+								nativeButton={false}
+								render={<Link href="/sign-in" />}
+							>
+								Sign in
+							</Button>
+							<Button
+								size="lg"
+								nativeButton={false}
+								render={<Link href="/sign-up" />}
+							>
+								Get started
+							</Button>
+						</>
+					) : (
+						<>
+							<Button
+								size="lg"
+								nativeButton={false}
+								render={<Link href="/dashboard" />}
+							>
+								Open App
+							</Button>
+						</>
+					)}
 				</div>
 
 				{/* Mobile toggle */}
@@ -84,7 +100,11 @@ export const LandingNavbar = () => {
 					aria-label={open ? 'Close menu' : 'Open menu'}
 					className="flex size-9 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted md:hidden"
 				>
-					{open ? <IconX className="size-5" /> : <IconMenu2 className="size-5" />}
+					{open ? (
+						<IconX className="size-5" />
+					) : (
+						<IconMenu2 className="size-5" />
+					)}
 				</button>
 			</nav>
 
@@ -95,7 +115,10 @@ export const LandingNavbar = () => {
 						initial={{ opacity: 0, height: 0 }}
 						animate={{ opacity: 1, height: 'auto' }}
 						exit={{ opacity: 0, height: 0 }}
-						transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+						transition={{
+							duration: 0.25,
+							ease: [0.22, 1, 0.36, 1],
+						}}
 						className="overflow-hidden border-b border-border/60 bg-background/95 backdrop-blur-md md:hidden"
 					>
 						<div className="flex flex-col gap-1 px-6 py-4">
@@ -116,7 +139,10 @@ export const LandingNavbar = () => {
 									className="w-full"
 									nativeButton={false}
 									render={
-										<Link href="/sign-in" onClick={() => setOpen(false)} />
+										<Link
+											href="/sign-in"
+											onClick={() => setOpen(false)}
+										/>
 									}
 								>
 									Sign in
@@ -126,7 +152,10 @@ export const LandingNavbar = () => {
 									className="w-full"
 									nativeButton={false}
 									render={
-										<Link href="/sign-up" onClick={() => setOpen(false)} />
+										<Link
+											href="/sign-up"
+											onClick={() => setOpen(false)}
+										/>
 									}
 								>
 									Get started
