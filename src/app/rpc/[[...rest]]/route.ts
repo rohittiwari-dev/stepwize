@@ -6,7 +6,7 @@ import {
 import { onError, ORPCError } from '@orpc/server';
 import { SimpleCsrfProtectionHandlerPlugin } from '@orpc/server/plugins';
 import { RatelimitHandlerPlugin } from '@orpc/experimental-ratelimit';
-import router from '@/lib/orpc/routers';
+import router from '@/orpc/routers';
 
 const handler = new RPCHandler(router, {
 	plugins: [

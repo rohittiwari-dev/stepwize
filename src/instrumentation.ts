@@ -5,6 +5,6 @@ export async function register() {
 	// the Node.js server (it lets RSC calls run in-process instead of over HTTP),
 	// so guard the import to the Node.js runtime.
 	if (process.env.NEXT_RUNTIME === 'nodejs') {
-		await import('./lib/orpc/server');
+		await import('./orpc/server');
 	}
 }
