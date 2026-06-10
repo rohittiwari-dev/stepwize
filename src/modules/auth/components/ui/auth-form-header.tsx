@@ -1,4 +1,4 @@
-import { IconBolt } from '@tabler/icons-react';
+import { StepwizeLogo } from '@/components/icons/stepwize-logo';
 import type { AuthMode } from '@/modules/auth/types';
 
 interface AuthFormHeaderProps {
@@ -29,7 +29,7 @@ export const AuthFormHeader = ({
 		<div className="mb-7">
 			{show_logo && (
 				<div className="mb-4 flex size-10 items-center justify-center rounded-xl bg-primary/10">
-					<IconBolt className="size-5 text-primary" />
+					<StepwizeLogo className="size-5" />
 				</div>
 			)}
 			<span className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">

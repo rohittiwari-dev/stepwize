@@ -2,7 +2,8 @@
 
 import { motion } from 'motion/react';
 import { toast } from 'sonner';
-import { IconBolt, IconLoader2, IconCornerUpLeft } from '@tabler/icons-react';
+import { IconLoader2, IconCornerUpLeft } from '@tabler/icons-react';
+import { StepwizeLogo } from '@/components/icons/stepwize-logo';
 import { Button } from '@/components/ui/button';
 import {
 	InputOTP,
@@ -53,7 +54,7 @@ export const CheckEmailView = ({
 				}}
 				className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 mb-5"
 			>
-				<IconBolt className="h-7 w-7 text-primary" />
+				<StepwizeLogo className="h-7 w-7" />
 			</motion.div>
 
 			<h2 className="text-xl font-semibold tracking-tight">

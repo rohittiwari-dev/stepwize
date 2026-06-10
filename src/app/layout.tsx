@@ -34,6 +34,7 @@ export const metadata: Metadata = {
 		'API orchestration',
 		'stepwize',
 	],
+
 	authors: [{ name: 'Stepwize' }],
 	creator: 'Stepwize',
 	openGraph: {
@@ -64,6 +65,8 @@ export const metadata: Metadata = {
 	},
 };
 
+import { ThemeProvider } from '@/components/theme-provider';
+
 export default function RootLayout({
 	children,
 }: Readonly<{
@@ -73,9 +76,17 @@ export default function RootLayout({
 		<html
 			lang="en"
 			className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-background`}
+			suppressHydrationWarning
 		>
-			<body className="min-h-full flex flex-col bg-background">
-				{children}
+			<body className="min-h-full flex flex-col bg-background" suppressHydrationWarning>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					{children}
+				</ThemeProvider>
 			</body>
 		</html>
 	);

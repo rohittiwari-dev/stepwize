@@ -9,15 +9,15 @@ const buttonVariants = cva(
 		variants: {
 			variant: {
 				default:
-					'bg-primary text-primary-foreground hover:bg-primary/80',
+					'bg-primary text-primary-foreground hover:shadow-neon hover:shadow-primary/40 transition-all duration-300',
 				outline:
-					'border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50',
+					'border-border/50 bg-background/30 backdrop-blur-md hover:bg-primary/20 hover:text-foreground hover:border-primary/50 hover:shadow-neon hover:shadow-primary/20 aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input/30 dark:bg-input/10 dark:hover:bg-primary/20 dark:hover:border-primary/50 transition-all duration-300',
 				secondary:
-					'bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
-				ghost: 'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
+					'bg-linear-to-r from-[var(--secondary-btn-start)] to-[var(--secondary-btn-end)] text-[var(--secondary-btn-text)] shadow-xs hover:shadow-neon hover:shadow-primary/30 hover:from-[var(--secondary-btn-hover-start)] hover:to-[var(--secondary-btn-hover-end)] transition-all duration-300',
+				ghost: 'hover:bg-primary/10 hover:text-primary hover:shadow-neon hover:shadow-primary/10 aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-primary/20 transition-all duration-300',
 				destructive:
-					'bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40',
-				link: 'text-primary underline-offset-4 hover:underline',
+					'bg-destructive/10 text-destructive hover:bg-destructive/20 hover:shadow-neon hover:shadow-destructive/30 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40 transition-all duration-300',
+				link: 'text-primary underline-offset-4 hover:underline hover:text-primary/80 transition-colors duration-300',
 			},
 			size: {
 				default:

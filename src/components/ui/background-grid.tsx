@@ -55,7 +55,7 @@ export const BackgroundGrid = ({
 					/>
 				</div>
 			)}
-
+			
 			{/* ── Grid lines – uses foreground-relative color, fades top → mid-bottom ── */}
 			<div
 				className="absolute inset-0"

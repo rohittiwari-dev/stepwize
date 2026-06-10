@@ -9,9 +9,9 @@ import Link from 'next/link';
 import {
 	IconArrowRight,
 	IconLoader2,
-	IconBolt,
 	IconShieldLock,
 } from '@tabler/icons-react';
+import { StepwizeLogo } from '@/components/icons/stepwize-logo';
 import { authClient } from '@/lib/auth/clients';
 import { Button } from '@/components/ui/button';
 import type { AuthMode } from '@/modules/auth/types';
@@ -126,9 +126,7 @@ export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 				variants={item}
 				className="mb-8 flex items-center gap-2.5 lg:hidden"
 			>
-				<span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-					<IconBolt className="size-5" />
-				</span>
+				<StepwizeLogo className="h-7 w-auto" />
 				<span className="text-lg font-bold tracking-tight">Stepwize</span>
 			</motion.div>
 
@@ -146,7 +144,7 @@ export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 				<Button
 					type="submit"
 					disabled={isSubmitting || oauthLoading}
-					className="group mt-6 h-11 w-full"
+					className="group mt-6 h-11 w-full rounded-lg shadow-neon hover:scale-[1.01] active:scale-[0.99] transition-transform"
 				>
 					{isSubmitting ? (
 						<IconLoader2 className="size-4 animate-spin" />

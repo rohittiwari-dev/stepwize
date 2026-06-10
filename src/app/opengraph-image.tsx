@@ -18,34 +18,28 @@ export default function OGImage() {
 					flexDirection: 'column',
 					alignItems: 'center',
 					justifyContent: 'center',
-					background: 'linear-gradient(135deg, #0F0F23 0%, #1a1a3e 50%, #0F0F23 100%)',
+					background: 'linear-gradient(135deg, #0A1628 0%, #0F1D36 50%, #0A1628 100%)',
 					fontFamily: 'sans-serif',
 				}}
 			>
 				{/* Icon mark */}
-				<div
-					style={{
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center',
-						width: 96,
-						height: 96,
-						borderRadius: 20,
-						background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
-						marginBottom: 32,
-					}}
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 50 39"
+					fill="none"
+					width={120}
+					height={94}
+					style={{ marginBottom: 32, display: 'flex' }}
 				>
-					<span
-						style={{
-							fontSize: 60,
-							fontWeight: 800,
-							color: 'white',
-							lineHeight: 1,
-						}}
-					>
-						S
-					</span>
-				</div>
+					<path
+						d="M16.4992 2H37.5808L22.0816 24.9729H1L16.4992 2Z"
+						fill="#007AFF"
+					/>
+					<path
+						d="M17.4231 27.1022L11.4199 36.0002H33.5015L49.0007 13.0273H32.7031L23.2071 27.1022H17.4231Z"
+						fill="#312ECB"
+					/>
+				</svg>
 
 				{/* Brand name */}
 				<span
@@ -77,7 +71,7 @@ export default function OGImage() {
 						width: 200,
 						height: 4,
 						borderRadius: 2,
-						background: 'linear-gradient(90deg, #6366F1, #8B5CF6, #A78BFA)',
+						background: 'linear-gradient(90deg, #007AFF, #312ECB, #007AFF)',
 						marginTop: 40,
 						display: 'flex',
 					}}

@@ -8,6 +8,8 @@ import {
 	IconBrandSlack,
 	IconDatabase,
 } from '@tabler/icons-react';
+import { StepwizeLogo } from '@/components/icons/stepwize-logo';
+import MagicRings from '@/components/ui/magic-rings';
 
 /* ─────────────────────────────────────────────────────────────
    Workflow graph — every node and wire lives in ONE fixed
@@ -241,21 +243,19 @@ export const AuthBrandPanel = () => {
 				}}
 			/>
 
-			{/* ── Faint grid ── */}
-			<div
-				className="pointer-events-none absolute inset-0 opacity-[0.06]"
-				style={{
-					backgroundImage: [
-						'linear-gradient(to right, currentColor 1px, transparent 1px)',
-						'linear-gradient(to bottom, currentColor 1px, transparent 1px)',
-					].join(', '),
-					backgroundSize: '36px 36px',
-					maskImage:
-						'radial-gradient(120% 90% at 50% 30%, black, transparent 75%)',
-					WebkitMaskImage:
-						'radial-gradient(120% 90% at 50% 30%, black, transparent 75%)',
-				}}
-			/>
+			{/* ── Magic Rings background ── */}
+			<div className="absolute inset-0 overflow-hidden opacity-60">
+				<MagicRings 
+					color="#8B5CF6" 
+					colorTwo="#D946EF" 
+					ringCount={5} 
+					ringGap={4} 
+					baseRadius={0.3}
+					followMouse={true} 
+					mouseInfluence={0.5} 
+					opacity={0.5}
+				/>
+			</div>
 
 			{/* ── Contained ambient glows ── */}
 			<motion.div
@@ -294,9 +294,7 @@ export const AuthBrandPanel = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.5, ease: EASE }}
 				>
-					<span className="flex size-9 items-center justify-center rounded-lg border border-primary-foreground/15 bg-primary-foreground/15 backdrop-blur-sm">
-						<IconBolt className="size-5" />
-					</span>
+					<StepwizeLogo className="h-7 w-auto" />
 					<span className="text-xl font-bold tracking-tight">
 						Stepwize
 					</span>

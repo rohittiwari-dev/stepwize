@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import {
-	IconBolt,
 	IconBrandGithub,
 	IconBrandX,
 	IconBrandDiscord,
 } from '@tabler/icons-react';
+import { StepwizeLogo } from '@/components/icons/stepwize-logo';
 
 const COLUMNS = [
 	{
@@ -35,9 +35,7 @@ export const LandingFooter = () => {
 					{/* Brand */}
 					<div>
 						<Link href="/" className="flex items-center gap-2.5">
-							<span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-								<IconBolt className="size-4.5" />
-							</span>
+							<StepwizeLogo className="h-6 w-auto" />
 							<span className="text-lg font-bold tracking-tight">
 								Stepwize
 							</span>
