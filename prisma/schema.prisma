@@ -13,16 +13,20 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String            @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean           @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions         Session[]
-  accounts         Account[]
-  subscription     UserSubscription?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  subscription  UserSubscription?
+
+  teammembers TeamMember[]
+  members     Member[]
+  invitations Invitation[]
 
   @@unique([email])
   @@map("user")
@@ -38,6 +42,9 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  activeOrganizationId String?
+  activeTeamId         String?
 
   @@unique([token])
   @@index([userId])
@@ -77,46 +84,45 @@ model Verification {
 }
 
 model Workflow {
-    id String @id @default(cuid())
-    name String
-    description String?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    userId String
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
 }
 
 model SubscriptionPlan {
-  id                    String                @id @default(cuid())
-  polarProductId        String?               @unique
-  name                  String                @unique
-  description           String?
-  price                 Int
-  currency              String                @default("usd")
-  interval              String?
+  id             String  @id @default(cuid())
+  polarProductId String? @unique
+  name           String  @unique
+  description    String?
+  price          Int
+  currency       String  @default("usd")
+  interval       String?
 
-  maxWorkflows          Int
-  maxExecutionHours     Int
-  historyDays           Int
-  maxCredentials        Int
-  templateCategory      String
-  maxTeamMembers        Int
-  maxTeams              Int
+  maxWorkflows      Int
+  maxExecutionHours Int
+  historyDays       Int
+  maxCredentials    Int
+  templateCategory  String
+  maxTeamMembers    Int
+  maxTeams          Int
 
-  features              SubscriptionFeature[]
-  users                 UserSubscription[]
-  
-  createdAt             DateTime              @default(now())
-  updatedAt             DateTime              @updatedAt
+  features  SubscriptionFeature[]
+  users     UserSubscription[]
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
 
   @@map("subscription_plan")
 }
 
 model SubscriptionFeature {
-  id             String           @id @default(cuid())
-  planId         String
-  plan           SubscriptionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
-  name           String
-  createdAt      DateTime         @default(now())
+  id        String           @id @default(cuid())
+  planId    String
+  plan      SubscriptionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  name      String
+  createdAt DateTime         @default(now())
 
   @@map("subscription_feature")
 }
@@ -150,4 +156,77 @@ model LicenseKey {
 
   @@index([email])
   @@map("license_key")
+}
+
+model Organization {
+  id          String       @id
+  name        String
+  slug        String
+  logo        String?
+  createdAt   DateTime
+  metadata    String?
+  teams       Team[]
+  members     Member[]
+  invitations Invitation[]
+
+  @@unique([slug])
+  @@map("organization")
+}
+
+model Team {
+  id             String       @id
+  name           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime
+  updatedAt      DateTime?    @updatedAt
+  teammembers    TeamMember[]
+
+  @@index([organizationId])
+  @@map("team")
+}
+
+model TeamMember {
+  id        String    @id
+  teamId    String
+  team      Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime?
+
+  @@index([teamId])
+  @@index([userId])
+  @@map("teamMember")
+}
+
+model Member {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String       @default("member")
+  createdAt      DateTime
+
+  @@index([organizationId])
+  @@index([userId])
+  @@map("member")
+}
+
+model Invitation {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           String?
+  teamId         String?
+  status         String       @default("pending")
+  expiresAt      DateTime
+  createdAt      DateTime     @default(now())
+  inviterId      String
+  user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([email])
+  @@map("invitation")
 }

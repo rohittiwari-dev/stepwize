@@ -15,7 +15,10 @@ import { StepwizeLogo } from '@/components/icons/stepwize-logo';
 import { authClient } from '@/lib/auth/clients';
 import { Button } from '@/components/ui/button';
 import type { AuthMode } from '@/features/auth/types';
-import { getAuthSchema, type AuthFormValues } from '@/features/auth/validations';
+import {
+	getAuthSchema,
+	type AuthFormValues,
+} from '@/features/auth/validations';
 import { AuthFormHeader } from './ui/auth-form-header';
 import { AuthFormFields } from './ui/auth-form-fields';
 import { AuthFormSocial } from './ui/auth-form-social';
@@ -67,7 +70,7 @@ export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 					email: values.email,
 					password: values.password,
 					name: values.name,
-					callbackURL: '/',
+					callbackURL: '/get-started',
 				});
 				if (error) {
 					toast.error(error.message || 'Sign up failed.');
@@ -81,6 +84,7 @@ export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 					email: values.email,
 					password: values.password,
 					callbackURL: '/dashboard',
+					rememberMe: true,
 				});
 				if (error) {
 					toast.error(error.message || 'Invalid email or password.');
@@ -101,6 +105,7 @@ export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 			const { error } = await authClient.signIn.social({
 				provider,
 				callbackURL: '/dashboard',
+				newUserCallbackURL: '/get-started',
 			});
 
 			if (error) {

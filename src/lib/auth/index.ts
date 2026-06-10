@@ -1,7 +1,7 @@
 import { betterAuth } from 'better-auth/minimal';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { prisma } from '../db';
-import { haveIBeenPwned, lastLoginMethod, openAPI } from 'better-auth/plugins';
+import { haveIBeenPwned, lastLoginMethod, openAPI, organization } from 'better-auth/plugins';
 import { nextCookies } from 'better-auth/next-js';
 import {
 	polar,
@@ -87,6 +87,36 @@ export const auth = betterAuth({
 		lastLoginMethod(),
 		haveIBeenPwned(),
 		openAPI(),
+		organization({
+			allowUserToCreateOrganization: true,
+			organizationLimit: 1,
+			creatorRole: 'owner',
+			teams: {
+				enabled: true,
+				maximumTeams: async ({ organizationId }) => {
+					const owner = await prisma.member.findFirst({
+						where: { organizationId, role: 'owner' },
+					});
+					if (!owner) return 100;
+					const sub = await prisma.userSubscription.findUnique({
+						where: { userId: owner.userId },
+						include: { plan: true },
+					});
+					return sub?.plan?.maxTeams === -1 ? 100 : (sub?.plan?.maxTeams ?? 1);
+				},
+			},
+			async membershipLimit(_user, organization) {
+				const owner = await prisma.member.findFirst({
+					where: { organizationId: organization.id, role: 'owner' },
+				});
+				if (!owner) return 100;
+				const sub = await prisma.userSubscription.findUnique({
+					where: { userId: owner.userId },
+					include: { plan: true },
+				});
+				return sub?.plan?.maxTeamMembers === -1 ? 100 : (sub?.plan?.maxTeamMembers ?? 3);
+			},
+		}),
 		polar({
 			client: polarClient,
 			createCustomerOnSignUp: true,

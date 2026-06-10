@@ -1,7 +1,6 @@
 import AuthForm from '@/features/auth/components/auth-form';
 import { AuthBrandPanel } from '@/features/auth/components/ui/auth-brand-panel';
 import { BackgroundGrid } from '@/components/ui/background-grid';
-import { Toaster } from '@/components/ui/sonner';
 
 const SignUpPage = () => {
 	return (
@@ -15,8 +14,6 @@ const SignUpPage = () => {
 					<AuthForm type="sign-up" />
 				</div>
 			</div>
-
-			<Toaster />
 		</main>
 	);
 };

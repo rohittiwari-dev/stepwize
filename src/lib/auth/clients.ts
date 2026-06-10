@@ -1,13 +1,14 @@
 import {
 	lastLoginMethodClient,
 	magicLinkClient,
+	organizationClient,
 } from 'better-auth/client/plugins';
 import { createAuthClient } from 'better-auth/react';
 import { polarClient } from '@polar-sh/better-auth';
 
 export const authClient = createAuthClient({
 	baseURL: 'http://localhost:3000',
-	plugins: [lastLoginMethodClient(), magicLinkClient(), polarClient()],
+	plugins: [lastLoginMethodClient(), magicLinkClient(), organizationClient({ teams: { enabled: true } }), polarClient()],
 });
 
 export const {

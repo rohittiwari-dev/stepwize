@@ -70,13 +70,12 @@
 	--sidebar-ring: oklch(0.65 0.25 290);
 
 	/* ── Shadows (Soft, bright glow) ── */
-	--radius: 0.75rem;
+	--radius: 0.45rem;
 	--shadow-color: oklch(0.65 0.25 290 / 0.08);
 	--shadow-2xs: 0 1px 2px 0px var(--shadow-color);
 	--shadow-xs: 0 1px 3px 0px var(--shadow-color);
 	--shadow-sm:
-		0 1px 2px 0px var(--shadow-color),
-		0 1px 3px -1px var(--shadow-color);
+		0 1px 2px 0px var(--shadow-color), 0 1px 3px -1px var(--shadow-color);
 	--shadow:
 		0 2px 6px 0px oklch(0.65 0.25 290 / 0.1),
 		0 1px 2px -1px oklch(0.65 0.25 290 / 0.05);
@@ -231,7 +230,8 @@
 	--shadow-neon-lg: var(--shadow-neon-lg);
 
 	--animate-meteor: meteor 5s linear infinite;
-	--animate-star-movement-bottom: star-movement-bottom linear infinite alternate;
+	--animate-star-movement-bottom: star-movement-bottom linear infinite
+		alternate;
 	--animate-star-movement-top: star-movement-top linear infinite alternate;
 
 	@keyframes meteor {

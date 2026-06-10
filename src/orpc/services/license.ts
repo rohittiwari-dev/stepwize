@@ -1,5 +1,8 @@
 import prisma from '@/lib/db';
-import { generateLicenseKey, isValidLicenseFormat } from '@/features/license/utils/keygen';
+import {
+	generateLicenseKey,
+	isValidLicenseFormat,
+} from '@/features/license/utils/keygen';
 
 const LicenseService = {
 	async createLicense(email: string, orderId: string) {
@@ -32,7 +35,10 @@ const LicenseService = {
 		}
 
 		if (license.activated && license.domain !== domain) {
-			return { valid: false, reason: 'License already activated on a different domain' };
+			return {
+				valid: false,
+				reason: 'License already activated on a different domain',
+			};
 		}
 
 		if (!license.activated) {
@@ -66,7 +72,11 @@ const LicenseService = {
 			return { valid: false, reason: 'License expired' };
 		}
 
-		return { valid: true, activated: license.activated, domain: license.domain };
+		return {
+			valid: true,
+			activated: license.activated,
+			domain: license.domain,
+		};
 	},
 
 	async getLicensesByEmail(email: string) {
