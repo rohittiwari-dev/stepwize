@@ -72,13 +72,15 @@ export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 				if (error) {
 					toast.error(error.message || 'Sign up failed.');
 				} else {
-					toast.success('Account created! Check your email to verify.');
+					toast.success(
+						'Account created! Check your email to verify.',
+					);
 				}
 			} else {
 				const { error } = await authClient.signIn.email({
 					email: values.email,
 					password: values.password,
-					callbackURL: '/',
+					callbackURL: '/dashboard',
 				});
 				if (error) {
 					toast.error(error.message || 'Invalid email or password.');
@@ -98,11 +100,13 @@ export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 		try {
 			const { error } = await authClient.signIn.social({
 				provider,
-				callbackURL: '/',
+				callbackURL: '/dashboard',
 			});
 
 			if (error) {
-				toast.error(error.message || `Failed to sign in with ${provider}.`);
+				toast.error(
+					error.message || `Failed to sign in with ${provider}.`,
+				);
 				setOauthLoading(false);
 			}
 			// On success, a redirect happens — loading stays on intentionally
@@ -127,7 +131,9 @@ export const AuthForm = ({ type = 'sign-in', show_logo }: AuthFormProps) => {
 				className="mb-8 flex items-center gap-2.5 lg:hidden"
 			>
 				<StepwizeLogo className="h-7 w-auto" />
-				<span className="text-lg font-bold tracking-tight">Stepwize</span>
+				<span className="text-lg font-bold tracking-tight">
+					Stepwize
+				</span>
 			</motion.div>
 
 			<motion.div variants={item}>

@@ -18,7 +18,7 @@ export default function OGImage() {
 					flexDirection: 'column',
 					alignItems: 'center',
 					justifyContent: 'center',
-					background: 'linear-gradient(135deg, #0A1628 0%, #0F1D36 50%, #0A1628 100%)',
+					background: 'linear-gradient(135deg, #0F0A1A 0%, #1A0F2E 50%, #0F0A1A 100%)',
 					fontFamily: 'sans-serif',
 				}}
 			>
@@ -33,11 +33,11 @@ export default function OGImage() {
 				>
 					<path
 						d="M16.4992 2H37.5808L22.0816 24.9729H1L16.4992 2Z"
-						fill="#007AFF"
+						fill="#A855F7"
 					/>
 					<path
 						d="M17.4231 27.1022L11.4199 36.0002H33.5015L49.0007 13.0273H32.7031L23.2071 27.1022H17.4231Z"
-						fill="#312ECB"
+						fill="#6366F1"
 					/>
 				</svg>
 
@@ -71,7 +71,7 @@ export default function OGImage() {
 						width: 200,
 						height: 4,
 						borderRadius: 2,
-						background: 'linear-gradient(90deg, #007AFF, #312ECB, #007AFF)',
+						background: 'linear-gradient(90deg, #A855F7, #6366F1, #A855F7)',
 						marginTop: 40,
 						display: 'flex',
 					}}

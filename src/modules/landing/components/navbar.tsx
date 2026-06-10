@@ -43,13 +43,17 @@ export const LandingNavbar = () => {
 				)}
 			>
 				{/* Logo */}
-				<button 
-					type="button" 
-					onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
+				<button
+					type="button"
+					onClick={() =>
+						window.scrollTo({ top: 0, behavior: 'smooth' })
+					}
 					className="flex items-center gap-2.5 hover:opacity-80 transition-opacity ml-2"
 				>
 					<StepwizeLogo className="h-6 w-auto" />
-					<span className="text-lg font-bold tracking-tight">Stepwize</span>
+					<span className="text-lg font-bold tracking-tight">
+						Stepwize
+					</span>
 				</button>
 
 				{/* Desktop links */}
@@ -83,7 +87,7 @@ export const LandingNavbar = () => {
 
 				{/* Desktop CTAs */}
 				<div className="hidden items-center gap-3 md:flex">
-					<ThemeToggle />
+					{/* <ThemeToggle /> */}
 					{!isPending && !session ? (
 						<>
 							<Button

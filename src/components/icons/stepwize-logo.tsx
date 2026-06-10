@@ -8,11 +8,23 @@ export const StepwizeLogo = (props: SVGProps<SVGSVGElement>) => (
 		{...props}
 	>
 		<defs>
-			<linearGradient id="neon-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+			<linearGradient
+				id="neon-grad-1"
+				x1="0%"
+				y1="0%"
+				x2="100%"
+				y2="100%"
+			>
 				<stop offset="0%" stopColor="#A855F7" /> {/* Purple 500 */}
 				<stop offset="100%" stopColor="#8B5CF6" /> {/* Violet 500 */}
 			</linearGradient>
-			<linearGradient id="neon-grad-2" x1="0%" y1="100%" x2="100%" y2="0%">
+			<linearGradient
+				id="neon-grad-2"
+				x1="0%"
+				y1="100%"
+				x2="100%"
+				y2="0%"
+			>
 				<stop offset="0%" stopColor="#8B5CF6" /> {/* Violet 500 */}
 				<stop offset="100%" stopColor="#6366F1" /> {/* Indigo 500 */}
 			</linearGradient>

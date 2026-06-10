@@ -7,6 +7,7 @@ import { LandingFooter } from '@/modules/landing/components/footer';
 import { Reveal } from '@/modules/landing/components/reveal';
 import { LandingIntegrations } from '@/modules/landing/components/integrations';
 import { BackgroundGrid } from '@/components/ui/background-grid';
+import LightPillar from '@/components/ui/light-pillar';
 
 const LOGOS = [
 	{ name: 'Acme', icon: '✦' },
