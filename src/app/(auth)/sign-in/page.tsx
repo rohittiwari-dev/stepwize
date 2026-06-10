@@ -1,5 +1,5 @@
-import AuthForm from '@/modules/auth/components/auth-form';
-import { AuthBrandPanel } from '@/modules/auth/components/ui/auth-brand-panel';
+import AuthForm from '@/features/auth/components/auth-form';
+import { AuthBrandPanel } from '@/features/auth/components/ui/auth-brand-panel';
 import { BackgroundGrid } from '@/components/ui/background-grid';
 import { Toaster } from '@/components/ui/sonner';
 

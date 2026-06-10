@@ -1,11 +1,11 @@
-import { LandingNavbar } from '@/modules/landing/components/navbar';
-import { LandingHero } from '@/modules/landing/components/hero';
-import { LandingFeatures } from '@/modules/landing/components/features';
-import { LandingSteps } from '@/modules/landing/components/steps';
-import { LandingCta } from '@/modules/landing/components/cta';
-import { LandingFooter } from '@/modules/landing/components/footer';
-import { Reveal } from '@/modules/landing/components/reveal';
-import { LandingIntegrations } from '@/modules/landing/components/integrations';
+import { LandingNavbar } from '@/features/landing/components/navbar';
+import { LandingHero } from '@/features/landing/components/hero';
+import { LandingFeatures } from '@/features/landing/components/features';
+import { LandingSteps } from '@/features/landing/components/steps';
+import { LandingCta } from '@/features/landing/components/cta';
+import { LandingFooter } from '@/features/landing/components/footer';
+import { Reveal } from '@/features/landing/components/reveal';
+import { LandingIntegrations } from '@/features/landing/components/integrations';
 import { BackgroundGrid } from '@/components/ui/background-grid';
 import LightPillar from '@/components/ui/light-pillar';
 

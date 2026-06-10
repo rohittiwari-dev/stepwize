@@ -10,7 +10,11 @@
 		"lint": "eslint",
 		"db:generate": "prisma generate",
 		"db:migrate": "prisma migrate dev",
-		"db:studio": "prisma studio"
+		"db:studio": "prisma studio",
+		"db:seed": "prisma db seed"
+	},
+	"prisma": {
+		"seed": "tsx prisma/seed.ts"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.5.0",
@@ -19,9 +23,13 @@
 		"@orpc/experimental-publisher": "^1.14.5",
 		"@orpc/experimental-ratelimit": "^1.14.5",
 		"@orpc/server": "^1.14.5",
+		"@orpc/tanstack-query": "^1.14.5",
+		"@polar-sh/better-auth": "^1.8.4",
+		"@polar-sh/sdk": "^0.48.1",
 		"@prisma/adapter-pg": "^7.8.0",
 		"@prisma/client": "^7.8.0",
 		"@tabler/icons-react": "^3.44.0",
+		"@tanstack/react-query": "^5.101.0",
 		"@types/three": "^0.184.1",
 		"@upstash/ratelimit": "^2.0.8",
 		"@upstash/redis": "^1.38.0",

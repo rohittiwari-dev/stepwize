@@ -13,8 +13,8 @@ import {
 import type { UseFormReturn } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Field, FieldLabel, FieldError } from '@/components/ui/field';
-import type { AuthMode } from '@/modules/auth/types';
-import type { AuthFormValues } from '@/modules/auth/validations';
+import type { AuthMode } from '@/features/auth/types';
+import type { AuthFormValues } from '@/features/auth/validations';
 
 interface AuthFormFieldsProps {
 	form: UseFormReturn<AuthFormValues>;

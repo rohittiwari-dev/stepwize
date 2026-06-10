@@ -10,6 +10,7 @@ import {
 	IconCertificate,
 } from '@tabler/icons-react';
 import SidebarFooter from './sidebar-footer';
+import SidebarBanner from './sidebar-banner';
 
 const NAV_GROUPS: SidebarNavGroup[] = [
 	{
@@ -49,6 +50,7 @@ const AppSidebar = () => {
 			<SidebarContent>
 				<SidebarNavItems groups={NAV_GROUPS} />
 			</SidebarContent>
+			<SidebarBanner />
 			<SidebarFooter />
 			<SidebarRail />
 		</Sidebar>

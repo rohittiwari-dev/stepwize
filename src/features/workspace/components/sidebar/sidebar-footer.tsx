@@ -1,5 +1,5 @@
 import { SidebarFooter as SidebarFooterPrimitives } from '@/components/ui/sidebar';
-import UserControl from '@/modules/auth/components/user-control';
+import UserControl from '@/features/auth/components/user-control';
 
 const SidebarFooter = () => {
 	return (

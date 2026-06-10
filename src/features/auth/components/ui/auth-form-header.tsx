@@ -1,5 +1,5 @@
 import { StepwizeLogo } from '@/components/icons/stepwize-logo';
-import type { AuthMode } from '@/modules/auth/types';
+import type { AuthMode } from '@/features/auth/types';
 
 interface AuthFormHeaderProps {
 	mode: AuthMode;

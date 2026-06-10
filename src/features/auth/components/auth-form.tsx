@@ -14,8 +14,8 @@ import {
 import { StepwizeLogo } from '@/components/icons/stepwize-logo';
 import { authClient } from '@/lib/auth/clients';
 import { Button } from '@/components/ui/button';
-import type { AuthMode } from '@/modules/auth/types';
-import { getAuthSchema, type AuthFormValues } from '@/modules/auth/validations';
+import type { AuthMode } from '@/features/auth/types';
+import { getAuthSchema, type AuthFormValues } from '@/features/auth/validations';
 import { AuthFormHeader } from './ui/auth-form-header';
 import { AuthFormFields } from './ui/auth-form-fields';
 import { AuthFormSocial } from './ui/auth-form-social';

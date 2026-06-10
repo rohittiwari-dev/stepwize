@@ -20,8 +20,9 @@ model User {
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
+  sessions         Session[]
+  accounts         Account[]
+  subscription     UserSubscription?
 
   @@unique([email])
   @@map("user")
@@ -82,4 +83,71 @@ model Workflow {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     userId String
+}
+
+model SubscriptionPlan {
+  id                    String                @id @default(cuid())
+  polarProductId        String?               @unique
+  name                  String                @unique
+  description           String?
+  price                 Int
+  currency              String                @default("usd")
+  interval              String?
+
+  maxWorkflows          Int
+  maxExecutionHours     Int
+  historyDays           Int
+  maxCredentials        Int
+  templateCategory      String
+  maxTeamMembers        Int
+  maxTeams              Int
+
+  features              SubscriptionFeature[]
+  users                 UserSubscription[]
+  
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  @@map("subscription_plan")
+}
+
+model SubscriptionFeature {
+  id             String           @id @default(cuid())
+  planId         String
+  plan           SubscriptionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  name           String
+  createdAt      DateTime         @default(now())
+
+  @@map("subscription_feature")
+}
+
+model UserSubscription {
+  id                  String           @id @default(cuid())
+  userId              String           @unique
+  user                User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId              String
+  plan                SubscriptionPlan @relation(fields: [planId], references: [id])
+  polarSubscriptionId String?          @unique
+  status              String
+  currentPeriodEnd    DateTime?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  @@map("user_subscription")
+}
+
+model LicenseKey {
+  id          String    @id @default(cuid())
+  key         String    @unique
+  email       String
+  orderId     String    @unique
+  activated   Boolean   @default(false)
+  activatedAt DateTime?
+  domain      String?
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([email])
+  @@map("license_key")
 }

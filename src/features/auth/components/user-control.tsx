@@ -17,6 +17,7 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from '@/components/ui/sidebar';
+import { Skeleton } from '@/components/ui/skeleton';
 import { signOut, useSession } from '@/lib/auth/clients';
 import {
 	IconBell,
@@ -38,8 +39,24 @@ function getInitials(name: string): string {
 
 const UserControl = () => {
 	const { isMobile } = useSidebar();
-	const { data: session } = useSession();
+	const { data: session, isPending } = useSession();
 	const router = useRouter();
+
+	if (isPending) {
+		return (
+			<SidebarMenu>
+				<SidebarMenuItem>
+					<SidebarMenuButton size="lg" className="pointer-events-none">
+						<Skeleton className="h-8 w-8 rounded-lg bg-muted-foreground/15 dark:bg-muted" />
+						<div className="grid flex-1 gap-1.5 text-left">
+							<Skeleton className="h-4 w-24 bg-muted-foreground/15 dark:bg-muted" />
+							<Skeleton className="h-3 w-32 bg-muted-foreground/15 dark:bg-muted" />
+						</div>
+					</SidebarMenuButton>
+				</SidebarMenuItem>
+			</SidebarMenu>
+		);
+	}
 
 	const user = session?.user;
 

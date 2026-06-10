@@ -7,6 +7,7 @@ import {
 	InputGroupAddon,
 	InputGroupInput,
 } from '@/components/ui/input-group';
+import { Kbd, KbdGroup } from '@/components/ui/kbd';
 
 import {
 	SidebarHeader as SidebarHeaderLayout,
@@ -69,6 +70,13 @@ const SidebarHeader = () => {
 						<IconSearch />
 					</InputGroupAddon>
 					<InputGroupInput placeholder="Search..." />
+
+					<InputGroupAddon align={'inline-end'}>
+						<KbdGroup>
+							<Kbd>Ctrl</Kbd>
+							<Kbd>/</Kbd>
+						</KbdGroup>
+					</InputGroupAddon>
 				</InputGroup>
 			</SidebarMenu>
 		</SidebarHeaderLayout>

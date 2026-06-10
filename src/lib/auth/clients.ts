@@ -3,10 +3,11 @@ import {
 	magicLinkClient,
 } from 'better-auth/client/plugins';
 import { createAuthClient } from 'better-auth/react';
+import { polarClient } from '@polar-sh/better-auth';
 
 export const authClient = createAuthClient({
 	baseURL: 'http://localhost:3000',
-	plugins: [lastLoginMethodClient(), magicLinkClient()],
+	plugins: [lastLoginMethodClient(), magicLinkClient(), polarClient()],
 });
 
 export const {
