@@ -104,14 +104,14 @@ const plans: PlanSeed[] = [
 		],
 	},
 	{
-		name: 'Enterprise',
-		description: 'Custom solutions for large organizations',
+		name: 'Max',
+		description: 'Maximum power for large organizations',
 		checkoutDescription:
-			'Everything in Pro plus unlimited history, unlimited teams and members, all templates, priority support, custom integrations, and SLA. Contact us to get started.',
-		price: 0,
+			'Everything in Pro plus unlimited history, unlimited teams and members, and all templates. Get the maximum power out of Stepwize.',
+		price: 4900,
 		currency: 'usd',
-		interval: null,
-		polarBillingType: 'free',
+		interval: 'month',
+		polarBillingType: 'recurring',
 		maxWorkflows: -1,
 		maxExecutionHours: -1,
 		historyDays: -1,
@@ -125,32 +125,6 @@ const plans: PlanSeed[] = [
 			'Unlimited team members',
 			'Unlimited teams',
 			'All templates',
-			'Priority support',
-			'Custom integrations',
-			'SLA',
-		],
-	},
-	{
-		name: 'Self Host',
-		description: 'Run Stepwize on your own infrastructure',
-		checkoutDescription:
-			'One-time purchase to run Stepwize on your own infrastructure. Includes everything in Enterprise, full data ownership, a self-host license key, and lifetime access.',
-		price: 3500,
-		currency: 'usd',
-		interval: null,
-		polarBillingType: 'one_time',
-		maxWorkflows: -1,
-		maxExecutionHours: -1,
-		historyDays: -1,
-		maxCredentials: -1,
-		templateCategory: 'ALL',
-		maxTeamMembers: -1,
-		maxTeams: -1,
-		features: [
-			'Everything in Enterprise',
-			'Self-hosted deployment',
-			'Full data ownership',
-			'One-time license fee',
 		],
 	},
 ];
@@ -191,9 +165,7 @@ async function loadBenefitsCache() {
 	for await (const page of existing) {
 		for (const b of page.result.items) {
 			benefitsCache.set(b.description, b.id);
-			if (b.type === 'license_keys') {
-				benefitsCache.set('__license_keys__', b.id);
-			}
+
 		}
 	}
 	return benefitsCache;
@@ -217,24 +189,7 @@ async function findOrCreateBenefit(description: string): Promise<string> {
 	return benefit.id;
 }
 
-async function findOrCreateLicenseKeyBenefit(): Promise<string> {
-	const cache = await loadBenefitsCache();
-	const cached = cache.get('__license_keys__');
-	if (cached) return cached;
 
-	await delay(300);
-	const benefit = await polar.benefits.create({
-		type: 'license_keys',
-		description: 'Self-host license key',
-		properties: {
-			prefix: 'SW',
-			activations: { limit: 1, enableCustomerAdmin: true },
-		},
-	});
-	cache.set('__license_keys__', benefit.id);
-	console.log(`    Created license key benefit`);
-	return benefit.id;
-}
 
 async function syncPolarProduct(plan: PlanSeed): Promise<string | null> {
 	const prices = buildPrices(plan);
@@ -292,10 +247,7 @@ async function syncPolarProduct(plan: PlanSeed): Promise<string | null> {
 		benefitIds.push(id);
 	}
 
-	if (plan.name === 'Self Host') {
-		const licenseId = await findOrCreateLicenseKeyBenefit();
-		benefitIds.push(licenseId);
-	}
+
 
 	await polar.products.updateBenefits({
 		id: productId,

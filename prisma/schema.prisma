@@ -142,22 +142,6 @@ model UserSubscription {
   @@map("user_subscription")
 }
 
-model LicenseKey {
-  id          String    @id @default(cuid())
-  key         String    @unique
-  email       String
-  orderId     String    @unique
-  activated   Boolean   @default(false)
-  activatedAt DateTime?
-  domain      String?
-  expiresAt   DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@index([email])
-  @@map("license_key")
-}
-
 model Organization {
   id          String       @id
   name        String

@@ -1,8 +1,9 @@
 import { IconUsers } from '@tabler/icons-react';
+import { TeamsAndMembers } from '@/features/settings/components/teams-and-members';
 
 export default function MembersSettingsPage() {
 	return (
-		<div className="space-y-8">
+		<div className="space-y-5">
 			{/* Page Header */}
 			<div className="space-y-1">
 				<div className="flex items-center gap-3">
@@ -14,7 +15,8 @@ export default function MembersSettingsPage() {
 							Teams & Members
 						</h1>
 						<p className="text-sm text-muted-foreground">
-							Manage team members, roles, and pending invitations
+							Manage your workspace members, teams, and
+							invitations
 						</p>
 					</div>
 				</div>
@@ -23,32 +25,8 @@ export default function MembersSettingsPage() {
 			{/* Divider */}
 			<div className="h-px bg-border/50" />
 
-			{/* Content placeholder */}
-			<div className="space-y-6">
-				<section className="space-y-4">
-					<h2 className="text-sm font-medium text-foreground/80">
-						Members
-					</h2>
-					<div className="rounded-xl border border-border/50 bg-card/50 p-6 backdrop-blur-sm">
-						<p className="text-sm text-muted-foreground">
-							View and manage workspace members. Assign roles and control access
-							levels for each team member.
-						</p>
-					</div>
-				</section>
-
-				<section className="space-y-4">
-					<h2 className="text-sm font-medium text-foreground/80">
-						Pending Invitations
-					</h2>
-					<div className="rounded-xl border border-border/50 bg-card/50 p-6 backdrop-blur-sm">
-						<p className="text-sm text-muted-foreground">
-							Invitations awaiting acceptance will be listed here. Resend or
-							revoke pending invites.
-						</p>
-					</div>
-				</section>
-			</div>
+			{/* Teams and Members */}
+			<TeamsAndMembers />
 		</div>
 	);
 }

@@ -1,4 +1,2 @@
-export const DEPLOYMENT_MODE = (process.env.DEPLOYMENT_MODE ?? 'selfhost') as
-	| 'saas'
-	| 'selfhost';
-export const isSelfHosted = DEPLOYMENT_MODE === 'selfhost';
+export const DEPLOYMENT_MODE = (process.env.DEPLOYMENT_MODE ?? 'saas') as 'saas';
+export const isSelfHosted = false;

@@ -2,7 +2,6 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-import { isSelfHosted } from '@/lib/deployment';
 import { OnboardingWizard } from '@/features/onboarding/components/onboarding-wizard';
 
 export const metadata = {
@@ -25,5 +24,5 @@ export default async function GetStartedPage() {
 		redirect('/dashboard');
 	}
 
-	return <OnboardingWizard isSelfHosted={isSelfHosted} />;
+	return <OnboardingWizard />;
 }

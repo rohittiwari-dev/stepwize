@@ -1,7 +1,12 @@
 import { betterAuth } from 'better-auth/minimal';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { prisma } from '../db';
-import { haveIBeenPwned, lastLoginMethod, openAPI, organization } from 'better-auth/plugins';
+import {
+	haveIBeenPwned,
+	lastLoginMethod,
+	openAPI,
+	organization,
+} from 'better-auth/plugins';
 import { nextCookies } from 'better-auth/next-js';
 import {
 	polar,
@@ -11,7 +16,6 @@ import {
 	webhooks,
 } from '@polar-sh/better-auth';
 import polarClient from '../polar';
-import LicenseService from '@/orpc/services/license';
 
 async function downgradeToFree(customerEmail: string | null | undefined) {
 	if (!customerEmail) {
@@ -93,28 +97,40 @@ export const auth = betterAuth({
 			creatorRole: 'owner',
 			teams: {
 				enabled: true,
-				maximumTeams: async ({ organizationId }) => {
+				allowRemovingAllTeams: false,
+				defaultTeam: {
+					enabled: true,
+				},
+				maximumMembersPerTeam: async ({ organizationId }) => {
 					const owner = await prisma.member.findFirst({
 						where: { organizationId, role: 'owner' },
 					});
-					if (!owner) return 100;
+					if (!owner) {
+						return 3;
+					}
 					const sub = await prisma.userSubscription.findUnique({
 						where: { userId: owner.userId },
 						include: { plan: true },
 					});
-					return sub?.plan?.maxTeams === -1 ? 100 : (sub?.plan?.maxTeams ?? 1);
+					return sub?.plan?.maxTeamMembers === -1
+						? 50
+						: (sub?.plan?.maxTeamMembers ?? 3);
 				},
-			},
-			async membershipLimit(_user, organization) {
-				const owner = await prisma.member.findFirst({
-					where: { organizationId: organization.id, role: 'owner' },
-				});
-				if (!owner) return 100;
-				const sub = await prisma.userSubscription.findUnique({
-					where: { userId: owner.userId },
-					include: { plan: true },
-				});
-				return sub?.plan?.maxTeamMembers === -1 ? 100 : (sub?.plan?.maxTeamMembers ?? 3);
+				maximumTeams: async ({ organizationId }) => {
+					const owner = await prisma.member.findFirst({
+						where: { organizationId, role: 'owner' },
+					});
+					if (!owner) {
+						return 1;
+					}
+					const sub = await prisma.userSubscription.findUnique({
+						where: { userId: owner.userId },
+						include: { plan: true },
+					});
+					return sub?.plan?.maxTeams === -1
+						? 50
+						: (sub?.plan?.maxTeams ?? 1);
+				},
 			},
 		}),
 		polar({
@@ -142,7 +158,6 @@ export const auth = betterAuth({
 					onOrderPaid: async (payload) => {
 						const polarProductId = payload.data.product?.id;
 						const customerEmail = payload.data.customer.email;
-						const orderId = payload.data.id;
 
 						if (!polarProductId || !customerEmail) {
 							return;
@@ -153,11 +168,6 @@ export const auth = betterAuth({
 						});
 
 						if (!plan) {
-							return;
-						}
-
-						if (plan.name === 'Self Host') {
-							await LicenseService.createLicense(customerEmail, orderId);
 							return;
 						}
 

@@ -29,13 +29,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 interface OnboardingWizardProps {
-	isSelfHosted: boolean;
 }
 
-type Step = 'workspace' | 'license' | 'invite' | 'complete';
+type Step = 'workspace' | 'invite' | 'complete';
 
-function getSteps(_isSelfHosted: boolean): Step[] {
-	// isSelfHosted
+function getSteps(): Step[] {
 	return ['workspace', 'invite', 'complete'];
 }
 
@@ -47,11 +45,6 @@ const STEP_META: Record<
 		icon: IconBuilding,
 		title: 'Name your workspace',
 		subtitle: "This is your team's home. Everything you build lives here.",
-	},
-	license: {
-		icon: IconKey,
-		title: 'Activate your license',
-		subtitle: 'Verify your self-hosted license and bind it to your domain.',
 	},
 	invite: {
 		icon: IconUserPlus,
@@ -75,10 +68,10 @@ function slugify(name: string) {
 		.replace(/^-|-$/g, '');
 }
 
-export function OnboardingWizard({ isSelfHosted }: OnboardingWizardProps) {
+export function OnboardingWizard() {
 	const router = useRouter();
 	const reduce = useReducedMotion();
-	const steps = getSteps(isSelfHosted);
+	const steps = getSteps();
 	const [stepIndex, setStepIndex] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [direction, setDirection] = useState(1);
@@ -89,9 +82,6 @@ export function OnboardingWizard({ isSelfHosted }: OnboardingWizardProps) {
 	const [slugValid, setSlugValid] = useState<boolean | null>(null);
 	const [slugChecking, setSlugChecking] = useState(false);
 
-	const [licenseKey, setLicenseKey] = useState('');
-	const [domain, setDomain] = useState('');
-	const [licenseValid, setLicenseValid] = useState<boolean | null>(null);
 	const [inviteEmail, setInviteEmail] = useState('');
 	const [invitedEmails, setInvitedEmails] = useState<string[]>([]);
 
@@ -184,37 +174,7 @@ export function OnboardingWizard({ isSelfHosted }: OnboardingWizardProps) {
 		}
 	};
 
-	const handleActivateLicense = async () => {
-		if (!licenseKey.trim() || !domain.trim()) {
-			toast.error('License key and domain are required');
-			return;
-		}
-		setLoading(true);
-		try {
-			const res = await fetch('/rpc/license.verify', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					key: licenseKey.trim(),
-					domain: domain.trim(),
-				}),
-			});
-			const data = await res.json();
-			if (data.valid) {
-				setLicenseValid(true);
-				toast.success('License activated!');
-				goNext();
-			} else {
-				setLicenseValid(false);
-				toast.error(data.reason || 'Invalid license');
-			}
-		} catch (err: any) {
-			setLicenseValid(false);
-			toast.error(err.message || 'License verification failed');
-		} finally {
-			setLoading(false);
-		}
-	};
+
 
 	const addEmailToList = () => {
 		const email = inviteEmail.trim();
@@ -272,8 +232,6 @@ export function OnboardingWizard({ isSelfHosted }: OnboardingWizardProps) {
 		switch (currentStep) {
 			case 'workspace':
 				return handleCreateWorkspace();
-			case 'license':
-				return handleActivateLicense();
 			case 'invite':
 				return handleSendAllInvites();
 			case 'complete':
@@ -283,7 +241,6 @@ export function OnboardingWizard({ isSelfHosted }: OnboardingWizardProps) {
 
 	const buttonLabel = {
 		workspace: 'Create Workspace',
-		license: 'Activate License',
 		invite:
 			invitedEmails.length > 0
 				? `Send ${invitedEmails.length} Invite${invitedEmails.length > 1 ? 's' : ''}`
@@ -294,9 +251,7 @@ export function OnboardingWizard({ isSelfHosted }: OnboardingWizardProps) {
 	const isActionDisabled =
 		loading ||
 		(currentStep === 'workspace' &&
-			(!workspaceName.trim() || slugValid !== true || slugChecking)) ||
-		(currentStep === 'license' && (!licenseKey.trim() || !domain.trim()));
-
+			(!workspaceName.trim() || slugValid !== true || slugChecking));
 	const slideVariants = {
 		enter: (dir: number) =>
 			reduce ? { opacity: 0 } : { opacity: 0, y: dir > 0 ? 20 : -20 },
@@ -532,67 +487,7 @@ export function OnboardingWizard({ isSelfHosted }: OnboardingWizardProps) {
 							</div>
 						)}
 
-						{/* ── License ── */}
-						{currentStep === 'license' && (
-							<div className="space-y-3">
-								<div className="space-y-1.5">
-									<Label htmlFor="license-key">
-										License key
-									</Label>
-									<Input
-										id="license-key"
-										placeholder="SW-XXXXX-XXXXX-XXXXX-XXXXX"
-										value={licenseKey}
-										onChange={(e) => {
-											setLicenseKey(e.target.value);
-											setLicenseValid(null);
-										}}
-										className="h-11 font-mono text-sm"
-										autoFocus
-									/>
-									<AnimatePresence>
-										{licenseValid === false && (
-											<motion.p
-												initial={{ opacity: 0, y: -4 }}
-												animate={{ opacity: 1, y: 0 }}
-												exit={{ opacity: 0 }}
-												className="flex items-center gap-1.5 text-xs text-destructive"
-											>
-												<IconX className="size-3" />{' '}
-												Invalid license key
-											</motion.p>
-										)}
-										{licenseValid === true && (
-											<motion.p
-												initial={{ opacity: 0, y: -4 }}
-												animate={{ opacity: 1, y: 0 }}
-												exit={{ opacity: 0 }}
-												className="flex items-center gap-1.5 text-xs text-emerald-600"
-											>
-												<IconCheck className="size-3" />{' '}
-												Verified
-											</motion.p>
-										)}
-									</AnimatePresence>
-								</div>
-								<div className="space-y-1.5">
-									<Label htmlFor="domain">Domain</Label>
-									<Input
-										id="domain"
-										placeholder="workflows.mycompany.com"
-										value={domain}
-										onChange={(e) =>
-											setDomain(e.target.value)
-										}
-										onKeyDown={(e) =>
-											e.key === 'Enter' &&
-											handleActivateLicense()
-										}
-										className="h-11"
-									/>
-								</div>
-							</div>
-						)}
+
 
 						{/* ── Invite ── */}
 						{currentStep === 'invite' && (
